@@ -1,16 +1,18 @@
-var fs = require("fs");
-var util = require('util');
-var socket = require("../socket");
+const fs = require("fs");
+const util = require('util');
+const socket = require("../socket");
+const as = require("../answears");
 
 function basic(post) {
 	const data = JSON.parse(post);
 	if (data['auth']==process.env.API_AUTH) {
-		const requests = {
+		const request = {
 			"time": new Date(),
 			"code": data['code'],
-			"request": data['request']
+			"request": data['request'],
+			"auth": process.env.API_AUTH
 		};
-		const strRequest = JSON.stringify(requests) + '\r\n';
+		const strRequest = JSON.stringify(request) + '\r\n';
 		const mode = {
 			"encoding": "utf8",
 			"mode": "0666",
@@ -21,9 +23,10 @@ function basic(post) {
 		} catch (error) {
 			console.error(err);
 		}
-		return socket.callback(requests);
+		socket.callback(request);
+		return as.answears[request['code']];
 	}
-	return '密钥错误';
+	return as.answears['000'];
 }
 
 exports.basic = basic;
