@@ -1,6 +1,13 @@
-const answears = {
-	'000': "密钥错误",
-	'001': "测试成功"
+const answears = require('./answears.json')
+
+function answear(code) {
+	if (answears[code] instanceof Array) {
+		max = answears[code].length;
+		random_indx = Math.floor(Math.random()*(max));
+		return answears[code][random_indx];
+	} else {
+		return answears[code];
+	}
 }
 
-exports.answears = answears;
+exports.answear = answear;

@@ -24,9 +24,9 @@ function basic(post) {
 			console.error(err);
 		}
 		socket.callback(request);
-		return as.answears[request['code']];
+		return as.answear(request['code']);
 	}
-	return as.answears['000'];
+	return as.answear('000');
 }
 
 exports.basic = basic;
