@@ -1,8 +1,7 @@
-var http = require('http');
+const http = require('http');
 
 function start(routers) {
-	var server = http.createServer(function (request, response) {
-		console.log(request.method + ': ' + request.url);
+	const server = http.createServer(function (request, response) {
 		var responding;
 		switch(request.method) {
 			case 'GET':
