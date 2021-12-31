@@ -4,8 +4,12 @@
   "description": "This is a smart home center.",
   "main": "index.js",
   "scripts": {
+    "start": "API_AUTH=123 node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Lianting Wang",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.4.0"
+  }
 }
