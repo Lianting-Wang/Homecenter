@@ -1,29 +1,46 @@
-import java.util.Arrays;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.awt.*;
+import java.io.FileReader;
+import java.io.IOException;
 
 public final class Runner {
-    private static final String[] index = new String[]{"000", "001", "101", "102", "103"};
-    private static final int[] method = new int[]{0, 0, 1, 1, 1};
-    private static final String[] name = new String[]{"", "", "chrome.exe", "steam.exe", "BH3.exe"};
-    private static final String[] locate = new String[]{"", "", "C:\\%programfiles%\\Google\\Chrome\\Application", "\"C:\\Program Files (x86)\\Steam\"", "D:\\SteamLibrary\\steamapps\\common\\HonkaiImpact3rd"};
+    public static void run(String code) throws IOException, ParseException, AWTException {
+        Object ob = new JSONParser().parse(new FileReader("./info.json"));
+        JSONObject info = (JSONObject) ob;
 
-    public static void run(String code) {
-        int i = Arrays.binarySearch(index, code);
-        if (method[i]==1) {
-            open(name[i], locate[i]);
+        if (info.containsKey(code)) {
+            JSONObject value = (JSONObject) info.get(code);
+            if ((long) value.get("method") == 1) {
+                JSONArray content = (JSONArray) value.get("content");
+                open((String) content.get(0), (String) content.get(1));
+            } else if ((long) value.get("method") == 2) {
+                JSONArray content = (JSONArray) value.get("content");
+                close((String) content.get(0), (String) content.get(1));
+            } else if ((long) value.get("method") == 3) {
+                JSONArray content = (JSONArray) value.get("content");
+                key(content);
+            }
         }
     }
 
     private static void open(String name, String locate) {
-        try {
-            String[] cmd = {".\\opener.exe", name, locate};
-            Process process = Runtime.getRuntime().exec(cmd);
-            int status = process.waitFor();
-            if(status != 0){
-                System.err.println("Failed to call shell's command and the return status's is: " + status);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
+        Core.shellExecute("open", name, locate);
+    }
+
+    private static void close(String type, String title) {
+        Core.closeWindows(type, title);
+    }
+
+    private static void key(JSONArray array) throws AWTException {
+        if (array.size()>2) {
+            Core.shortcutKeys((int)(long) array.get(0), (int)(long) array.get(1), (int)(long) array.get(2));
+        } else {
+            Core.shortcutKeys((int)(long) array.get(0), (int)(long) array.get(1));
         }
     }
+
 }
