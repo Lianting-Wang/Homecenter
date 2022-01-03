@@ -23,6 +23,7 @@ function start() {
 			client.send(data);
 		});
 	};
+	setInterval(() => wss.broadcast('001'), 60*60*2*1000);
 	console.log('WebSocket is running at http://127.0.0.1:'+PORT+'/');
 }
 
